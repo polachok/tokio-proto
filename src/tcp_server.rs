@@ -105,7 +105,7 @@ impl<Kind, P> TcpServer<Kind, P> where
     /// This method will block the current thread until the server is shut down.
     pub fn with_handle<F, S>(&self, new_service: F) where
         F: Fn(&Handle) -> S + Send + Sync + 'static,
-        S: NewService + Send + Sync + 'static,
+        S: NewService,
         S::Instance: 'static,
         P::ServiceError: 'static,
         P::ServiceResponse: 'static,
@@ -139,7 +139,7 @@ impl<Kind, P> TcpServer<Kind, P> where
 fn serve<P, Kind, F, S>(binder: Arc<P>, addr: SocketAddr, workers: usize, new_service: &F)
     where P: BindServer<Kind, TcpStream>,
           F: Fn(&Handle) -> S,
-          S: NewService + Send + Sync,
+          S: NewService,
           S::Instance: 'static,
           P::ServiceError: 'static,
           P::ServiceResponse: 'static,
